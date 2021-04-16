@@ -66,15 +66,23 @@
                     aria-valuemin="0" aria-valuemax="100"></div>
             </div>
             <div v-on:click="anAction" v-for="article in articles" class="jumbotron">
-                <h3></h3>
-                <p class="text-muted">{{article.title}}</p>
-                <p class="text-primary">{{article.domain}}</p>
                 <p class="text-secondary">{{article.created_at}}</p>
-                <p class="text-warning">{{article.url}}</p>
-                <p class="text-danger">Donec ullamcorper nulla non metus auctor fringilla.</p>
-                <p class="text-success">Duis mollis, est non commodo luctus, nisi erat porttitor ligula.</p>
-                <p class="text-info">Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
-                <pre> {{ article }}</pre>
+                <h3 class="text-primary">{{article.domain}}</h3>
+                
+                <a v-bind:href="article.url" class="text-warning"><h5 class="text-muted">{{article.title}}</h5></a>
+                <div class="row">
+                    <div class="col"><p class="text-danger "><span class="p-2">{{article.votes.important}} </span> <i class="fa fa-chart-line" aria-hidden="true"></i></p></div>
+                    <div class="col"><p class="text-secondary "><span class="p-2">{{article.votes.liked}} </span> <i class="fa fa-thumbs-up" aria-hidden="true"></i></p></div>
+                    <div class="col"><p class="text-danger"><span class="p-2">{{article.votes.disliked}} </span> <i class="fa fa-thumbs-down" aria-hidden="true"></i></p></div>
+                    <div class="col"><p class="text-warning"><span class="p-2">{{article.votes.lol}} </span> <i class="fa fa-smile" aria-hidden="true"></i></p></div>
+                    <div class="col"><p class="text-warning"><span class="p-2">{{article.votes.toxic}} </span> <i class="fa fa-exclamation-triangle" aria-hidden="true"></i></p></div>
+                    <div class="col"><p class="text-info "><span class="p-2">{{article.votes.comments}} </span> <i class="fa fa-comment-alt" aria-hidden="true"></i></p></div>
+                    <div class="col"><p class="text-info "><span class="p-2">{{article.votes.saved}} </span> <i class="fa fa-save" aria-hidden="true"></i></p></div>
+                    <div class="col"><p class="text-success"><span class="p-2">{{article.votes.positive}} </span> <i class="fa fa-arrow-up" aria-hidden="true"></i></p> </div>
+                    <div class="col"><p class="text-danger "><span class="p-2">{{article.votes.negative}} </span> <i class="fa fa-arrow-down" aria-hidden="true"></i></p></div>
+                    <div class="col"></div>
+                    <div class="col"></div>
+                </div>                 
             </div>
             <div style="display: grid; grid-row: auto; grid-template-columns: repeat(2,1fr); column-gap:5px;">
 
