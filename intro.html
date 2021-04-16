@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <meta name="Description" content="Enter your description here" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta1/css/bootstrap.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
+        />
+        <link rel="stylesheet" href="assets/css/style.css" />
+        <title>BOE</title>
+    </head>
+    <body>
+        <div id="msg" class="alert alert-dismissible alert-danger">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Oh snap!</strong> <a href="#" class="alert-link">Change a few things up</a> and try submitting again.
+        </div>
+        <div class="progress">
+            <div
+                class="progress-bar progress-bar-striped bg-success"
+                role="progressbar"
+                style="width: 5%"
+                aria-valuenow="25"
+                aria-valuemin="0"
+                aria-valuemax="100"
+            ></div>
+        </div>
+        <script>
+            const progress = document.getElementsByClassName('progress-bar')
+            const msg = document.getElementById('msg')
+            msg.style.display = "none";
+            var count = 0
+            setInterval(() => {
+                if (count == 100) {
+                    count = 2
+                }
+                progress[0].style.width = `${count}%`
+                count += 10
+                if(count == 80){
+                    msg.style.display = "block"
+                }
+            }, 1000)
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.5.4/umd/popper.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta1/js/bootstrap.min.js"></script>
+    </body>
+</html>
