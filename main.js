@@ -9,20 +9,6 @@ const feed = 'https://api.coinpaprika.com/v1/coins'
 const gecko = 'https://api.coingecko.com/api/v3/exchange_rates'
 const URL = 'https://api.coindesk.com/v1/bpi/currentprice.json'
 
-function newsData() {
-    return Observable.create((observer) => {
-        fetch('./crypto.json')
-            .then((response) => {
-                return response.json()
-            })
-            .then((data) => {
-                observer.next(data)
-                observer.complete()
-            })
-            .catch((err) => observer.error(err))
-    })
-}
-
 function fetchData(url) {
     return Observable.create((observer) => {
         fetch(url)
@@ -36,7 +22,7 @@ function fetchData(url) {
 }
 /* VUE COMPONENTS */
 
-const news$ = newsData()
+const news$ = fetchData('./crypto.json')
 Vue.component('currency-data', {
     props: ['name', 'unit', 'type'],
     template:
