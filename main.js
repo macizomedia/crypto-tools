@@ -1,3 +1,4 @@
+Vue.prototype.moment = moment
 import { store } from './store.js'
 import { apiRequest, apiUSD } from './api.js'
 const { Observable } = rxjs
@@ -138,7 +139,7 @@ new Vue({
                 style: 'currency',
                 currency: 'CHF',
             })
-        },
+        }
     },
     methods: {
         anAction: function () {
