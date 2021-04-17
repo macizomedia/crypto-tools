@@ -1,5 +1,4 @@
 Vue.prototype.moment = moment
-Vue.config.devtools = true
 import { store } from './store.js'
 import { apiRequest, apiUSD } from './api.js'
 const { Observable } = rxjs
@@ -38,6 +37,7 @@ Vue.component('news-feed', {
         toxic: Number,
         lol: Number,
         created_at: String,
+        domain: String,
         commentIds: Array,
         callback: Function,
         contactsPromise: Promise, 
@@ -45,6 +45,7 @@ Vue.component('news-feed', {
     data: function () {
         return {
             count: 0,
+            like: this.liked,
             textDecoration: 'none',
             textWeight: 'bold',
             isActive: true,
@@ -64,25 +65,34 @@ Vue.component('news-feed', {
                 'text-muted': this.saved === 0,
             }
         },
+        likes: function () {
+            return this.liked
+        }
+    },
+    methods: {
     },
     template: `
     <div class="card">
-        <p class="text-muted"><small>{{moment(created_at, "YYYYMMDD").fromNow()}}</small></p>
-        <div class="row">
-            <h4 class="col-10">{{title}}</h4>
-            <p :class="[negative > 0 ? 'text-danger' : 'text-muted']"><span class="p-1" v-if="negative > 0">{{negative}} </span> <i
+        <div class="row justify-content-space-around">
+            <p class="col" :class="[negative > 0 ? 'text-danger' : 'text-muted']"><span class="p-1" v-if="negative > 0">{{negative}} </span> <i
                         class="fa fa-arrow-down" aria-hidden="true" v-if="negative > 0"></i></p>
-            <p :class="[positive > 0 ? 'text-success': 'text-muted']"><span class="p-1" v-if="positive > 0">{{positive}} </span> <i
+            <p class="col" :class="[positive > 0 ? 'text-success': 'text-muted']"><span class="p-1" v-if="positive > 0">{{positive}} </span> <i
                         class="fa fa-arrow-up" aria-hidden="true" v-if="positive > 0"></i></p>
-            <p :class="[toxic > 0 ? 'text-warning' : 'text-muted']"><span class="p-1" v-if="toxic > 0">{{toxic}} </span> <i
+            <p class="col" :class="[toxic > 0 ? 'text-warning' : 'text-muted']"><span class="p-1" v-if="toxic > 0">{{toxic}} </span> <i
                             class="fa fa-exclamation-triangle" aria-hidden="true" v-if="toxic > 0" ></i></p>
-            <p :class="[lol > 0 ? 'text-warning' : 'text-muted']"><span class="p-1" v-if="lol > 0">{{lol}} </span> <i
+            <p class="col" :class="[lol > 0 ? 'text-warning' : 'text-muted']"><span class="p-1" v-if="lol > 0">{{lol}} </span> <i
                             class="fa fa-smile" aria-hidden="true" v-if="lol > 0" ></i></p>
-            <p :class="[saved > 0 ? 'text-primary' : 'text-muted']"> <span class="p-1" v-if="saved > 0"> {{saved}} </span> <i class="fa fa-save"
+            <p class="col" :class="[saved > 0 ? 'text-primary' : 'text-muted']"> <span class="p-1" v-if="saved > 0"> {{saved}} </span> <i class="fa fa-save"
                             aria-hidden="true" v-if="saved > 0" ></i></p>
+            <p class="col col col-md-auto text-muted"><small>{{domain}}</small></p>
+            <p class="col col col-lg-2 text-muted"><small>{{moment(created_at, "YYYYMMDD").fromNow()}}</small></p>
+        </div>
+        <div class="row">
+            <h5 class="col-10">{{title}}</h5>
+            
         </div>
         <div class="card-body row justify-content-right">
-            <p class="col" :class="[liked > 0 ? 'text-info' : 'text-muted']"> <span class="p-1" v-if="liked > 0"> {{liked}} </span> <i class="fa fa-thumbs-up"
+            <p v-on:click.once="like++" class="col" :class="[like > 0 ? 'text-info' : 'text-muted']"> <span class="p-1" v-if="like > 0"> {{like}} </span> <i  class="fa fa-thumbs-up"
                             aria-hidden="true"></i></p>
             <p class="col" :class="[disliked > 0 ? 'text-danger': 'text-muted']"> <span class="p-1" v-if="disliked > 0"> {{disliked}} </span> <i class="fa fa-thumbs-down"
                             aria-hidden="true"></i></p>
