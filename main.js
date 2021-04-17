@@ -1,4 +1,5 @@
 Vue.prototype.moment = moment
+Vue.config.devtools = true
 import { store } from './store.js'
 import { apiRequest, apiUSD } from './api.js'
 const { Observable } = rxjs
@@ -24,6 +25,75 @@ function fetchData(url) {
 /* VUE COMPONENTS */
 
 const news$ = fetchData('./crypto.json')
+Vue.component('news-feed', {
+    props: {
+        title: String,
+        currency: Object,
+        liked: Number,
+        disliked: Number,
+        saved: Number,
+        comments: Number,
+        negative: Number,
+        positive: Number,
+        toxic: Number,
+        lol: Number,
+        created_at: String,
+        commentIds: Array,
+        callback: Function,
+        contactsPromise: Promise, 
+    },
+    data: function () {
+        return {
+            count: 0,
+            textDecoration: 'none',
+            textWeight: 'bold',
+            isActive: true,
+            hasError: null,
+        }
+    },
+    computed: {
+        styling: function () {
+            return {
+                textDecoration: this.textDecoration,
+                textWeight: this.textWeight,
+            }
+        },
+        classObject: function () {
+            return {
+                active: this.isActive && !this.error,
+                'text-muted': this.saved === 0,
+            }
+        },
+    },
+    template: `
+    <div class="card">
+        <p class="text-muted"><small>{{moment(created_at, "YYYYMMDD").fromNow()}}</small></p>
+        <div class="row">
+            <h4 class="col-10">{{title}}</h4>
+            <p :class="[negative > 0 ? 'text-danger' : 'text-muted']"><span class="p-1" v-if="negative > 0">{{negative}} </span> <i
+                        class="fa fa-arrow-down" aria-hidden="true" v-if="negative > 0"></i></p>
+            <p :class="[positive > 0 ? 'text-success': 'text-muted']"><span class="p-1" v-if="positive > 0">{{positive}} </span> <i
+                        class="fa fa-arrow-up" aria-hidden="true" v-if="positive > 0"></i></p>
+            <p :class="[toxic > 0 ? 'text-warning' : 'text-muted']"><span class="p-1" v-if="toxic > 0">{{toxic}} </span> <i
+                            class="fa fa-exclamation-triangle" aria-hidden="true" v-if="toxic > 0" ></i></p>
+            <p :class="[lol > 0 ? 'text-warning' : 'text-muted']"><span class="p-1" v-if="lol > 0">{{lol}} </span> <i
+                            class="fa fa-smile" aria-hidden="true" v-if="lol > 0" ></i></p>
+            <p :class="[saved > 0 ? 'text-primary' : 'text-muted']"> <span class="p-1" v-if="saved > 0"> {{saved}} </span> <i class="fa fa-save"
+                            aria-hidden="true" v-if="saved > 0" ></i></p>
+        </div>
+        <div class="card-body row justify-content-right">
+            <p class="col" :class="[liked > 0 ? 'text-info' : 'text-muted']"> <span class="p-1" v-if="liked > 0"> {{liked}} </span> <i class="fa fa-thumbs-up"
+                            aria-hidden="true"></i></p>
+            <p class="col" :class="[disliked > 0 ? 'text-danger': 'text-muted']"> <span class="p-1" v-if="disliked > 0"> {{disliked}} </span> <i class="fa fa-thumbs-down"
+                            aria-hidden="true"></i></p>
+            <p class="col" :class="[comments > 0 ? 'text-info' : 'text-muted']"><span class="p-1" v-if="comments > 0">{{comments}} </span> <i
+                            class="fa fa-comment-alt" aria-hidden="true"></i></p>
+            
+            <span class="col-8"></span>
+        </div>
+    </div>
+    `,
+})
 Vue.component('currency-data', {
     props: ['name', 'unit', 'type'],
     template:
@@ -88,7 +158,7 @@ new Vue({
                 this.errorMessage = error
                 console.error('There was an error!', error)
             }),
-            news$.subscribe((x) => this.articles = x.results.flat())
+            news$.subscribe((x) => (this.articles = x.results.flat()))
     },
     computed: {
         rate: function () {
@@ -139,7 +209,7 @@ new Vue({
                 style: 'currency',
                 currency: 'CHF',
             })
-        }
+        },
     },
     methods: {
         anAction: function () {

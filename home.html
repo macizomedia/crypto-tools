@@ -39,7 +39,7 @@
             </ul>
             <form v-on:submit.prevent class="form-inline my-2 my-lg-0">
                 <input class="form-control mr-sm-2" type="text" placeholder="Search">
-                <buttonclass="btn btn-secondary my-2 my-sm-0">Search</button>
+                <button class="btn btn-secondary my-2 my-sm-0">Search</button>
             </form>
         </div>
     </nav>
@@ -66,61 +66,21 @@
                 <div class="progress-bar bg-info" role="progressbar" style="width: 20%;" aria-valuenow="20"
                     aria-valuemin="0" aria-valuemax="100"></div>
             </div>
-            <div v-on:click="anAction" v-for="article in articles" class="p-2">
-                <div class="p-3">
-                    <p class="text-secondary">{{moment(article.created_at, "YYYYMMDD").fromNow()}}</p>
-                </div>
-                <div class="row justify-content-sm-center">
-                    <p class="text-muted col-auto mr-auto"> <small> {{article.domain}}</small></p>
-                    <div class="col-auto">
-                        <p class="text-danger p-2">{{article.votes.important}}</span> <i class="fa fa-chart-line"
-                                aria-hidden="true"></i></p>
-                    </div>
-                    <div class="col-auto">
-                        <p class="text-info p-2">{{article.votes.saved}} <i class="fa fa-save"
-                                aria-hidden="true"></i></p>
-                    </div>
-                </div>
-
-                <h6 class="text-primary">{{article.title}}</h6>
-
-                <a v-bind:href="article.url" class="text-warning">
-
-                </a>
-                <div class="row">
-                    <div class="col">
-                        <p class="text-success "><span class="p-2">{{article.votes.liked}} </span> <i
-                                class="fa fa-thumbs-up" aria-hidden="true"></i></p>
-                    </div>
-                    <div class="col">
-                        <p class="text-danger"><span class="p-2">{{article.votes.disliked}} </span> <i
-                                class="fa fa-thumbs-down" aria-hidden="true"></i></p>
-                    </div>
-                    <div class="col">
-                        <p class="text-primary"><span class="p-2">{{article.votes.lol}} </span> <i class="fa fa-smile"
-                                aria-hidden="true"></i></p>
-                    </div>
-                    <div class="col">
-                        <p class="text-warning"><span class="p-2">{{article.votes.toxic}} </span> <i
-                                class="fa fa-exclamation-triangle" aria-hidden="true"></i></p>
-                    </div>
-                    <div class="col">
-                        <p class="text-info "><span class="p-2">{{article.votes.comments}} </span> <i
-                                class="fa fa-comment-alt" aria-hidden="true"></i></p>
-                    </div>
-
-                    <div class="col">
-                        <p class="text-success"><span class="p-2">{{article.votes.positive}} </span> <i
-                                class="fa fa-arrow-up" aria-hidden="true"></i></p>
-                    </div>
-                    <div class="col">
-                        <p class="text-danger "><span class="p-2">{{article.votes.negative}} </span> <i
-                                class="fa fa-arrow-down" aria-hidden="true"></i></p>
-                    </div>
-                    <div class="col"></div>
-                    <div class="col"></div>
-                </div>
-            </div>
+            <news-feed class="p-2 mt-1" v-for="art in articles" 
+            :key="art.id" 
+            :created_at="art.created_at" 
+            :title="art.title"
+            :saved="art.votes.saved"
+            :liked="art.votes.liked"
+            :disliked="art.votes.disliked"
+            :comments="art.votes.comments"
+            :negative="art.votes.negative"
+            :positive="art.votes.positive"
+            :toxic="art.votes.toxic"
+            :lol="art.votes.lol"
+            >
+            </news-feed>
+            
             <div style="display: grid; grid-row: auto; grid-template-columns: repeat(2,1fr); column-gap:5px;">
 
                 <div v-for="entry in data" class="card mb-3">
