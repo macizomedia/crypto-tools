@@ -22,7 +22,7 @@ function fetchData(url) {
     })
 }
 /* VUE COMPONENTS */
-
+const rates$ = fetchData(gecko)
 const news$ = fetchData('./crypto.json')
 Vue.component('news-feed', {
     props: {
@@ -149,26 +149,11 @@ new Vue({
         }, 8000)
     },
     mounted() {
-        fetch('https://api.coingecko.com/api/v3/exchange_rates')
-            .then(async (response) => {
-                const data = await response.json()
-
-                if (!response.ok) {
-                    const error = (data && data.message) || response.statusText
-                    return Promise.reject(error)
-                }
-                const object = getArr(data.rates)
-                this.currenciesList = getKeys(data.rates)
-                this.currencies = object
-                console.log(this.currencies)
-                this.log()
-                this.isLoading = false
-            })
-            .catch((error) => {
-                this.errorMessage = error
-                console.error('There was an error!', error)
-            }),
+            this.isLoading = false
+            rates$.subscribe((data) => this.currencies = getArr(data.rates))
+            rates$.subscribe((data) => this.currenciesList = getKeys(data.rates))
             news$.subscribe((x) => (this.articles = x.results.flat()))
+            this.log()
     },
     computed: {
         rate: function () {
