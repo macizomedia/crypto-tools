@@ -27,7 +27,8 @@ const news$ = fetchData('./crypto.json')
 Vue.component('news-feed', {
     props: {
         title: String,
-        currency: Object,
+        url: String,
+        currency: Array,
         liked: Number,
         disliked: Number,
         saved: Number,
@@ -53,53 +54,46 @@ Vue.component('news-feed', {
         }
     },
     computed: {
-        styling: function () {
-            return {
-                textDecoration: this.textDecoration,
-                textWeight: this.textWeight,
-            }
-        },
-        classObject: function () {
-            return {
-                active: this.isActive && !this.error,
-                'text-muted': this.saved === 0,
-            }
-        },
         likes: function () {
             return this.liked
+        },
+        currencies: function () {
+            let names; 
+            if(this.currency) {
+                this.currency.forEach(item => names = ({"code":item.code, "url": item.url}))
+            }
+            return names
         }
     },
     methods: {
     },
     template: `
-    <div class="card">
-        <div class="row justify-content-space-around">
+    <div class="card mt-2">
+        <div class="d-flex bg-blue">
+            <p class="p-2 text-muted"><small>{{domain}}</small></p>
+            <p class="p-2 text-muted"><small>{{moment(created_at, "YYYYMMDD").fromNow()}}</small></p>
+            <p class="ml-auto p-2 text-secondary"><small><a :href="currencies.url" v-if="currencies"> {{currencies.code}}</a></small> </p>
+        </div>
+        <div class="row card-body bg-dark">
+            <h5 class="col-10 tex-primary"><a :href="url" >{{title}}</a></h5>
             <p class="col" :class="[negative > 0 ? 'text-danger' : 'text-muted']"><span class="p-1" v-if="negative > 0">{{negative}} </span> <i
                         class="fa fa-arrow-down" aria-hidden="true" v-if="negative > 0"></i></p>
             <p class="col" :class="[positive > 0 ? 'text-success': 'text-muted']"><span class="p-1" v-if="positive > 0">{{positive}} </span> <i
                         class="fa fa-arrow-up" aria-hidden="true" v-if="positive > 0"></i></p>
-            <p class="col" :class="[toxic > 0 ? 'text-warning' : 'text-muted']"><span class="p-1" v-if="toxic > 0">{{toxic}} </span> <i
-                            class="fa fa-exclamation-triangle" aria-hidden="true" v-if="toxic > 0" ></i></p>
-            <p class="col" :class="[lol > 0 ? 'text-warning' : 'text-muted']"><span class="p-1" v-if="lol > 0">{{lol}} </span> <i
-                            class="fa fa-smile" aria-hidden="true" v-if="lol > 0" ></i></p>
-            <p class="col" :class="[saved > 0 ? 'text-primary' : 'text-muted']"> <span class="p-1" v-if="saved > 0"> {{saved}} </span> <i class="fa fa-save"
-                            aria-hidden="true" v-if="saved > 0" ></i></p>
-            <p class="col col col-md-auto text-muted"><small>{{domain}}</small></p>
-            <p class="col col col-lg-2 text-muted"><small>{{moment(created_at, "YYYYMMDD").fromNow()}}</small></p>
         </div>
-        <div class="row">
-            <h5 class="col-10">{{title}}</h5>
-            
-        </div>
-        <div class="card-body row justify-content-right">
+        <div class="card-footer border-info p-3 row justify-content-center">
             <p v-on:click.once="like++" class="col" :class="[like > 0 ? 'text-info' : 'text-muted']"> <span class="p-1" v-if="like > 0"> {{like}} </span> <i  class="fa fa-thumbs-up"
                             aria-hidden="true"></i></p>
             <p class="col" :class="[disliked > 0 ? 'text-danger': 'text-muted']"> <span class="p-1" v-if="disliked > 0"> {{disliked}} </span> <i class="fa fa-thumbs-down"
                             aria-hidden="true"></i></p>
             <p class="col" :class="[comments > 0 ? 'text-info' : 'text-muted']"><span class="p-1" v-if="comments > 0">{{comments}} </span> <i
                             class="fa fa-comment-alt" aria-hidden="true"></i></p>
-            
-            <span class="col-8"></span>
+            <p class="col" :class="[toxic > 0 ? 'text-warning' : 'text-muted']"><span class="p-1" v-if="toxic > 0">{{toxic}} </span> <i
+                            class="fa fa-exclamation-triangle" aria-hidden="true" v-if="toxic > 0" ></i></p>
+            <p class="col" :class="[lol > 0 ? 'text-warning' : 'text-muted']"><span class="p-1" v-if="lol > 0">{{lol}} </span> <i
+                            class="fa fa-smile" aria-hidden="true" v-if="lol > 0" ></i></p>
+            <p class="col" :class="[saved > 0 ? 'text-primary' : 'text-muted']"> <span class="p-1" v-if="saved > 0"> {{saved}} </span> <i class="fa fa-save"
+                            aria-hidden="true" v-if="saved > 0" ></i></p>
         </div>
     </div>
     `,
@@ -151,6 +145,7 @@ new Vue({
     mounted() {
             this.isLoading = false
             rates$.subscribe((data) => this.currencies = getArr(data.rates))
+            rates$.pipe(map((data) => data.rates)).subscribe((rate) => this.request = rate)
             rates$.subscribe((data) => this.currenciesList = getKeys(data.rates))
             news$.subscribe((x) => (this.articles = x.results.flat()))
             this.log()
@@ -208,13 +203,7 @@ new Vue({
     },
     methods: {
         anAction: function () {
-            const data$ = fetchData(gecko)
-            data$
-                .pipe(map((data) => data.rates))
-                .subscribe((rate) =>
-                    console.log(rate[this.currency.unit.toLowerCase()])
-                )
-            return console.log('hello')
+            return console.log(this.request[this.currency.unit.toLowerCase()].name)
         },
         log() {
             if (this.counter < this.currenciesList.length) {

@@ -1,136 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>CryptoMarket</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        />
+        <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+        <script src="https://unpkg.com/vuex@3.6.2/dist/vuex.js"></script>
+        <script src="https://unpkg.com/rxjs/bundles/rxjs.umd.min.js"></script>
+        <script src="https://unpkg.com/xstate@4/dist/xstate.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+        <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+        <link rel="stylesheet" type="text/css" href="style.css" />
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CryptoMarket</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-    <script src="https://unpkg.com/vuex@3.6.2/dist/vuex.js"></script>
-    <script src="https://unpkg.com/rxjs/bundles/rxjs.umd.min.js"></script>
-    <script src="https://unpkg.com/xstate@4/dist/xstate.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
-    <link rel="stylesheet" type="text/css" href="style.css">
-</head>
-
-<body class="p-5 bg-dark text-white">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Block Of Ether</a>
-        <div class="collapse navbar-collapse" id="navbarColor02">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="index.html">Home
-                        <span class="sr-only">(current)</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Articles</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Tools</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
-                </li>
-            </ul>
-            <form v-on:submit.prevent class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="text" placeholder="Search">
-                <button class="btn btn-secondary my-2 my-sm-0">Search</button>
-            </form>
-        </div>
-    </nav>
-    <div id="app" class="row">
-        <div v-if="!isLoading" class="card mb-3 col-8">
-            <h3 @click="anAction" class="display-3 text-secondary">{{ currency.name }} </h3>
-            <h3 class="display-5 text-warning">{{ rate }} </h3>
-            <currency-data class="display-5 text-muted" :name="currency.name" :unit="currency.unit"
-                :type="currency.type"></currency-data>
-            <hr class="my-4">
-            <div class="row">
-                <p class="lead col text-muted"><small>{{ euro }} </small></p>
-                <p class="lead col text-muted"><small>{{ dolar }} </small></p>
-                <p class="lead col text-muted"><small>{{ pound }} </small></p>
-                <p class="lead col text-muted"><small>{{ yen }} </small></p>
-                <p class="lead col text-muted"><small>{{ franco }} </small></p>
-                <p class="col"></p>
+    <body class="p-5 bg-dark text-white">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">Block Of Ether</a>
+            <div class="collapse navbar-collapse" id="navbarColor02">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="index.html"
+                            >Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Articles</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Tools</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+                <form v-on:submit.prevent class="form-inline my-2 my-lg-0">
+                    <input
+                        class="form-control mr-sm-2"
+                        type="text"
+                        placeholder="Search"
+                    />
+                    <button class="btn btn-secondary my-2 my-sm-0">
+                        Search
+                    </button>
+                </form>
             </div>
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" style="width: 15%;" aria-valuenow="15" aria-valuemin="0"
-                    aria-valuemax="100"></div>
-                <div class="progress-bar bg-success" role="progressbar" style="width: 30%;" aria-valuenow="30"
-                    aria-valuemin="0" aria-valuemax="100"></div>
-                <div class="progress-bar bg-info" role="progressbar" style="width: 20%;" aria-valuenow="20"
-                    aria-valuemin="0" aria-valuemax="100"></div>
+        </nav>
+        <div id="app" class="row">
+            <div v-if="isLoading" class="progress">
+                <div
+                    class="progress-bar progress-bar-striped progress-bar-animated"
+                    role="progressbar"
+                    aria-valuenow="75"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    style="width: 75%"
+                ></div>
             </div>
-            <news-feed class="p-2 mt-1" v-for="art in articles" 
-            :key="art.id" 
-            :created_at="art.created_at" 
-            :title="art.title"
-            :domain="art.domain"
-            :saved="art.votes.saved"
-            :liked="art.votes.liked"
-            :disliked="art.votes.disliked"
-            :comments="art.votes.comments"
-            :negative="art.votes.negative"
-            :positive="art.votes.positive"
-            :toxic="art.votes.toxic"
-            :lol="art.votes.lol"
-            >
-            </news-feed>
-            
-            <div style="display: grid; grid-row: auto; grid-template-columns: repeat(2,1fr); column-gap:5px;">
+            <div v-if="!isLoading" class="card mb-3 col-8">
+                <h3 @click="anAction" class="display-3 text-secondary">
+                    {{ currency.name }}
+                </h3>
+                <h3 class="display-5 text-warning">{{ rate }}</h3>
+                <currency-data
+                    class="display-5 text-muted"
+                    :name="currency.name"
+                    :unit="currency.unit"
+                    :type="currency.type"
+                ></currency-data>
+                <hr class="my-4" />
+                <div class="row">
+                    <p class="lead col text-muted">
+                        <small>{{ euro }} </small>
+                    </p>
+                    <p class="lead col text-muted">
+                        <small>{{ dolar }} </small>
+                    </p>
+                    <p class="lead col text-muted">
+                        <small>{{ pound }} </small>
+                    </p>
+                    <p class="lead col text-muted"><small>{{ yen }} </small></p>
+                    <p class="lead col text-muted">
+                        <small>{{ franco }} </small>
+                    </p>
+                    <p class="col"></p>
+                </div>
+                <div class="progress">
+                    <div
+                        class="progress-bar"
+                        role="progressbar"
+                        style="width: 15%"
+                        aria-valuenow="15"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                    ></div>
+                    <div
+                        class="progress-bar bg-success"
+                        role="progressbar"
+                        style="width: 30%"
+                        aria-valuenow="30"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                    ></div>
+                    <div
+                        class="progress-bar bg-info"
+                        role="progressbar"
+                        style="width: 20%"
+                        aria-valuenow="20"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                    ></div>
+                </div>
+                <news-feed
+                    class="p-2 mt-1"
+                    v-for="art in articles"
+                    :key="art.id"
+                    :created_at="art.created_at"
+                    :title="art.title"
+                    :url="art.url"
+                    :currency="art.currencies"
+                    :domain="art.domain"
+                    :saved="art.votes.saved"
+                    :liked="art.votes.liked"
+                    :disliked="art.votes.disliked"
+                    :comments="art.votes.comments"
+                    :negative="art.votes.negative"
+                    :positive="art.votes.positive"
+                    :toxic="art.votes.toxic"
+                    :lol="art.votes.lol"
+                >
+                </news-feed>
 
-                <div v-for="entry in data" class="card mb-3">
-                    <p class="card-header">{{entry.name}}</p>
-                    <div class="card-body">
-                        <p class="card-title">{{entry.country}}</p>
-                        <p class="card-subtitle text-muted">Established in {{ entry.year_established }}</p>
+                <div
+                    style="
+                        display: grid;
+                        grid-row: auto;
+                        grid-template-columns: repeat(2, 1fr);
+                        column-gap: 5px;
+                    "
+                >
+                    <div v-for="entry in data" class="card mb-3">
+                        <p class="card-header">{{entry.name}}</p>
+                        <div class="card-body">
+                            <p class="card-title">{{entry.country}}</p>
+                            <p class="card-subtitle text-muted">
+                                Established in {{ entry.year_established }}
+                            </p>
+                        </div>
+                        <div class="card-body">
+                            <img :src="entry.image" alt="" srcset="" />
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <!-- <i class="fa fa-chevron-up" aria-hidden="true"></i>  -->{{Math.abs(entry.trade_volume_24h_btc).toFixed(2)}}
+                            </li>
+                            <li class="list-group-item">
+                                {{
+                                Math.abs(entry.trade_volume_24h_btc_normalized).toFixed(2)
+                                }}
+                            </li>
+                        </ul>
+                        <div class="card-body">
+                            <a :href="entry.url" class="card-link"
+                                >{{entry.url}}</a
+                            >
+                        </div>
+                        <div class="card-footer text-muted">
+                            Trust rank: {{entry.trust_score_rank}}
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <img :src="entry.image" alt="" srcset="">
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-
-                            <!-- <i class="fa fa-chevron-up" aria-hidden="true"></i>  -->{{Math.abs(entry.trade_volume_24h_btc).toFixed(2)}}
-                        </li>
-                        <li class="list-group-item"> {{ Math.abs(entry.trade_volume_24h_btc_normalized).toFixed(2) }}
-                        </li>
-                    </ul>
-                    <div class="card-body">
-                        <a :href="entry.url" class="card-link">{{entry.url}}</a>
-                    </div>
-                    <div class="card-footer text-muted">
-                        Trust rank: {{entry.trust_score_rank}}
+                </div>
+            </div>
+            <div class="card col-4 d-flex justify-content-start">
+                <div
+                    style="
+                        display: grid;
+                        grid-row: auto;
+                        grid-template-columns: repeat(2, 1fr);
+                        column-gap: 2px;
+                    "
+                >
+                    <div class="card-body" v-for="currency in currencies">
+                        <p v-on:click="log" class="card-title">
+                            {{ currency[1].name }}
+                        </p>
+                        <p class="card-subtitle mb-2 text-muted">
+                            {{ currency[1].type }}
+                        </p>
+                        <p class="card-text">
+                            {{ Math.floor(Math.random(3)*13 ) }}
+                        </p>
+                        <a href="#" class="card-link"
+                            ><small
+                                >{{ currency[1].unit + ' ' + currency[1].value
+                                }}</small
+                            >
+                        </a>
+                        <a href="#"
+                            ><small
+                                >{{ (1 / currency[1].value).toFixed(4) }}
+                            </small></a
+                        >
                     </div>
                 </div>
             </div>
         </div>
-        <div class="card col-4 d-flex justify-content-start">
-            <div style="display: grid; grid-row: auto; grid-template-columns: repeat(2,1fr); column-gap: 2px;">
-
-                <div class="card-body" v-for="currency in currencies">
-                    <p v-on:click="log" class="card-title">{{ currency[1].name }}</p>
-                    <p class="card-subtitle mb-2 text-muted">{{ currency[1].type }}</p>
-                    <p class="card-text">{{ Math.floor(Math.random(3)*13 ) }}</p>
-                    <a href="#" class="card-link"><small>{{ currency[1].unit + ' ' + currency[1].value }}</small> </a>
-                    <a href="#"><small>{{ (1 / currency[1].value).toFixed(4) }} </small></a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script type="module" src="main.js " crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
-        crossorigin="anonymous"></script>
-    <script type="text/javascript">
-        console.log(' ')
-    </script>
-</body>
-
+        <script type="module" src="main.js " crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+            crossorigin="anonymous"
+        ></script>
+        <script type="text/javascript">
+            console.log(' ')
+        </script>
+    </body>
 </html>
