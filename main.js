@@ -57,9 +57,15 @@ Vue.component('news-feed', {
         likes: function () {
             return this.liked
         },
+        dislikes: function () {
+            return this.disliked
+        },
         currencies: function () {
             let names; 
             if(this.currency) {
+                if(this.currency.length > 1) {
+                    this.currency.reduce((acc,curr) => { acc[curr.code] = curr.url; return acc},[])
+                }
                 this.currency.forEach(item => names = ({"code":item.code, "url": item.url}))
             }
             return names
