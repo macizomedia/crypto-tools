@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <meta name="Description" content="Enter your description here" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.6.0/darkly/bootstrap.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
+        />
+        <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+        <script src="https://unpkg.com/xstate@4/dist/xstate.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/6.6.7/rxjs.umd.min.js?module"></script>
+        <title>Machine</title>
+    </head>
+    <style>
+        .wrapper {
+            padding: 3rem;
+        }
+        #draggable {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <body>
+        <nav
+            class="navbar navbar-dark navbar-expand-md bg-primary justify-content-between"
+        >
+            <div class="container-fluid">
+                <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target=".dual-nav"
+                >
+                    <span class="navbar-toggler-icon">Reeset</span>
+                </button>
+                <div
+                    class="navbar-collapse collapse dual-nav w-50 order-1 order-md-0"
+                >
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link pl-0" href="home.html">Home</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">Rates</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Resources</a>
+                        </li>
+                    </ul>
+                </div>
+                <a
+                    href="/"
+                    class="navbar-brand mx-auto d-block text-center order-0 order-md-1 w-25"
+                ></a>
+                <div class="navbar-collapse collapse dual-nav w-50 order-2">
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">SingIn</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">SignUp</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div
+            style="
+                display: grid;
+                grid-row: auto;
+                grid-template-columns: repeat(2, 1fr);
+                column-gap: 5px;
+            "
+        >
+            <div v-for="entry in data" class="card mb-3">
+                <p class="card-header">{{entry.name}}</p>
+                <div class="card-body">
+                    <p class="card-title">{{entry.country}}</p>
+                    <p class="card-subtitle text-muted">
+                        Established in {{ entry.year_established }}
+                    </p>
+                </div>
+                <div class="card-body">
+                    <img :src="entry.image" alt="" srcset="" />
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <!-- <i class="fa fa-chevron-up" aria-hidden="true"></i>  -->{{Math.abs(entry.trade_volume_24h_btc).toFixed(2)}}
+                    </li>
+                    <li class="list-group-item">
+                        {{
+                        Math.abs(entry.trade_volume_24h_btc_normalized).toFixed(2)
+                        }}
+                    </li>
+                </ul>
+                <div class="card-body">
+                    <a :href="entry.url" class="card-link">{{entry.url}}</a>
+                </div>
+                <div class="card-footer text-muted">
+                    Trust rank: {{entry.trust_score_rank}}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col w-25">
+                <div class="wrapper">
+                    <div class="card" style="width: 18rem">
+                        <img class="card-img-top" src="" alt="Card image cap" />
+                        <div id="draggable" class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">
+                                Some quick example text to build on the card
+                                title and make up the bulk of the cards content.
+                            </p>
+                            <form>
+                                <div class="form-group">
+                                    <label for="exampleFormControlFile1"
+                                        >Example file input</label
+                                    >
+                                    <input
+                                        type="file"
+                                        class="form-control-file"
+                                        id="exampleFormControlFile1"
+                                    />
+                                </div>
+                            </form>
+                            <button class="btn btn-primary" type="submit">
+                                Button
+                            </button>
+                            <a href="#" class="btn btn-primary">Link Here</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="module" defer src="app.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+    </body>
+</html>
