@@ -2,9 +2,18 @@
 
 > crypto-tools in vue
 
-## Installation
+## About this project
 
-This project is no require node-modules
+A playground for differents way to deal with a frontend applications that consumes Cryptocurrencies API, the project is framework agnostic and explore diferents examples while dealing with this type of data. 
+
+for this project we use
+
+- Vue
+- rsjs
+- StateMachine
+- Lodash
+
+For server side we are no using any framwork just a barebode node server.
 
 ## Usage
 
